@@ -76,8 +76,9 @@ const ParametresPage = () => {
         <Card>
           <CardTitle>Utilisateurs</CardTitle>
           <CardText>Ajouter ou modifier les utilisateurs.</CardText>
-          <CardLink to="/utilisateurs">Accéder</CardLink>
+          <CardLink to="/users">Accéder</CardLink>
         </Card>
+
 
         <Card>
           <CardTitle>Statuts</CardTitle>

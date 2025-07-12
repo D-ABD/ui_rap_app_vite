@@ -13,7 +13,7 @@ import type { ButtonHTMLAttributes } from 'react';
  *   - 'success'
  */
 interface CustomProps {
-  $variant?: 'primary' | 'secondary' | 'danger' | 'success';
+  $variant?: 'primary' | 'secondary' | 'danger' | 'success' | 'warning';
 }
 
 // 🧩 Fusion des props HTML standard avec nos props customisées

@@ -1,8 +1,8 @@
-// src/pages/RegisterPage.tsx
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import api from '../../api/axios';
+import { toast } from 'react-toastify';
 import {
   Wrapper,
   Card,
@@ -12,21 +12,28 @@ import {
   Button,
   ErrorMessage,
 } from '../../components/LoginFormElements';
-import api from '../../api/axios';
-import { toast } from 'react-toastify';
 
+/**
+ * 📝 RegisterPage
+ *
+ * Page d'inscription utilisateur.
+ * Envoie les champs requis par `RegistrationSerializer`.
+ */
 const RegisterPage = () => {
   const navigate = useNavigate();
   const [form, setForm] = useState({
     email: '',
     password1: '',
     password2: '',
-
+    first_name: '',
+    last_name: '',
   });
+
   const [error, setError] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setForm(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -42,10 +49,11 @@ const RegisterPage = () => {
       await api.post('/register/', {
         email: form.email,
         password: form.password1,
-
+        first_name: form.first_name,
+        last_name: form.last_name,
       });
 
-      toast.success("Compte créé avec succès. En attente de validation par un administrateur.");
+      toast.success('✅ Compte créé avec succès. En attente de validation par un administrateur.');
       navigate('/login');
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
@@ -53,6 +61,8 @@ const RegisterPage = () => {
         const msg =
           data?.email?.[0] ||
           data?.password?.[0] ||
+          data?.first_name?.[0] ||
+          data?.last_name?.[0] ||
           data?.non_field_errors?.[0] ||
           'Erreur lors de la création du compte.';
         setError(msg);
@@ -66,8 +76,27 @@ const RegisterPage = () => {
     <Wrapper>
       <Card>
         <Title>Créer un compte</Title>
-        <form onSubmit={handleSubmit}>
 
+        <form onSubmit={handleSubmit}>
+          <Label htmlFor="first_name">Prénom</Label>
+          <Input
+            id="first_name"
+            name="first_name"
+            type="text"
+            value={form.first_name}
+            onChange={handleChange}
+            required
+          />
+
+          <Label htmlFor="last_name">Nom</Label>
+          <Input
+            id="last_name"
+            name="last_name"
+            type="text"
+            value={form.last_name}
+            onChange={handleChange}
+            required
+          />
 
           <Label htmlFor="email">Email</Label>
           <Input
@@ -99,7 +128,7 @@ const RegisterPage = () => {
             required
           />
 
-          {error && <ErrorMessage>{error}</ErrorMessage>}
+          {error && <ErrorMessage role="alert">{error}</ErrorMessage>}
 
           <Button type="submit">Créer un compte</Button>
         </form>

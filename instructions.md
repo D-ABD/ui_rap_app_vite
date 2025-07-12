@@ -92,53 +92,52 @@ voici mes fichiers de config, si tu as besoin d'en voir plus dis le moi:
 
 import axios from 'axios';
 
-/**
- * 🔧 Axios – instance personnalisée pour l’API Django
- *
- * Cette instance configure :
- * - l'URL de base (`baseURL`)
- * - l'envoi automatique des cookies (`withCredentials`)
- * - l'injection du token d'authentification JWT pour les routes sécurisées
- */
+// src/api/axios.ts
+
+import axios from 'axios';
+import qs from 'qs';
+import { triggerGlobalLogout } from './globalLogout';
+import { toast } from 'react-toastify';
 
 const api = axios.create({
-  baseURL: 'http://localhost:8000/api', // URL de base de l'API Django
-  withCredentials: true, // Envoie les cookies (utile pour CSRF ou sessions Django)
+  baseURL: 'http://localhost:8000/api',
+  withCredentials: true,
+  paramsSerializer: params => qs.stringify(params, { arrayFormat: 'repeat' }),
 });
 
-/**
- * 🔐 Intercepteur de requêtes Axios
- *
- * - Récupère le token JWT depuis localStorage
- * - Ajoute un en-tête Authorization (`Bearer <token>`) à toutes les requêtes sauf :
- *    - /users/register/
- *    - /login/
- *    - /token/
- *
- * Cela évite les erreurs 401 lors de l’inscription ou de la connexion.
- */
 api.interceptors.request.use(config => {
   const token = localStorage.getItem('access');
-
   const publicEndpoints = ['/users/register/', '/login/', '/token/'];
   const url = config.url ?? '';
 
-  const isPublicEndpoint = publicEndpoints.some(endpoint => url.endsWith(endpoint));
+  const isPublic = publicEndpoints.some(endpoint => url.endsWith(endpoint));
 
-  if (token && !isPublicEndpoint) {
+  if (token && !isPublic) {
     config.headers = config.headers ?? {};
     config.headers.Authorization = `Bearer ${token}`;
-    console.log("🔐 Token ajouté à la requête:", config.headers.Authorization);
-  } else {
-    console.log("✅ Requête publique sans token:", url);
   }
-
 
   return config;
 });
 
-export default api;
+// ⛔️ Intercepteur réponse : déconnexion automatique si erreur d’auth
+api.interceptors.response.use(
+  response => response,
+  error => {
+    const status = error?.response?.status;
 
+    if (status === 401 || status === 403) {
+      console.warn("🔒 Session expirée ou invalide");
+      triggerGlobalLogout();
+      toast.error("Session expirée. Veuillez vous reconnecter.");
+    }
+
+    return Promise.reject(error);
+  }
+);
+
+export default api;
+ 
 
 ---------------------------------
 
@@ -189,33 +188,13 @@ je vais te montrer des exemples de mes pages edit, create et centrepages, pour q
 
 
 
---------------------
-Afficher la liste des candidats dans la page de détail d'une formation 
-
-Ajouter un bouton "Inscrire un candidat à cette formation" 
-
-automatiser le remplissage de champs comme nombre_candidats ou nombre_entretiens dans le modèle Formation, sans les stocker en base, mais en les calculant dynamiquement à partir des relations.
-
-from django.db.models import Count
-
-class Formation(BaseModel):
-    ...
-
-    @property
-    def nombre_candidats(self) -> int:
-        return self.candidats.count()
-
-    @property
-    def nombre_entretiens(self) -> int:
-        return self.entretiens.count()
-
-charger plusieurs formations avec leurs statistiques en une seule requête, utilise une annotate :
-
---------------------
 
 
 dans formation: 
 détzerminer le nombre de candidat avec entreprise
 candidat calculé automatiquement
 inscrit calcul automatisue
-appairage
+appairage 
+Afficher une colonne “Nombre d'appairages” et un lien, dans la liste des partenaires ou candidats ou formlation.... 
+
+Je souhaite que les canddats ne voient pas la totalité de leur profile, certaines infos ne sont que pour le staff et admin

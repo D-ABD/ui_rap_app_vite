@@ -22,7 +22,6 @@ import CreateStatuts from '../pages/statuts/StatutsCreatePage';
 import EditStatuts from '../pages/statuts/StatutsEditPage';
 
 import ProspectionPage from '../pages/prospection/ProspectionPage';
-import UtilisateursPage from '../pages/users/UtilisateursPage';
 import VaePage from '../pages/vae/VaePage';
 import EvenementsPage from '../pages/Evenements/EvenementsPage';
 import LogPage from '../pages/logs/LogPage';
@@ -47,6 +46,9 @@ import type { JSX } from 'react';
 import DocumentsCreatePage from '../pages/Documents/DocumentsCreatePage';
 import DocumentsEditPage from '../pages/Documents/DocumentsEditPage';
 import FormationsDocumentsPage from '../pages/formations/componentsFormations/FormationsDocumentsPage';
+import UsersPage from '../pages/users/UsersPage';
+import UsersCreatePage from '../pages/users/UsersCreatePage';
+import UsersEditPage from '../pages/users/UsersEditPage';
 
 const AppRoutes = () => {
   const { isAuthenticated, isLoading } = useAuth();
@@ -104,13 +106,16 @@ const AppRoutes = () => {
       <Route path="/documents/create" element={secure(<DocumentsCreatePage />)} />
       <Route path="/documents/edit/:id" element={secure(<DocumentsEditPage />)} />
 
+      {/* Utilisateurs */}
+      <Route path="/users" element={secure(<UsersPage />)} />
+      <Route path="/users/create" element={secure(<UsersCreatePage />)} />
+      <Route path="/users/:id/edit" element={secure(<UsersEditPage />)} />
 
       {/* Autres modules */}
       <Route path={ROUTES.prepaComp} element={secure(<PrépaCompPage />)} />
       <Route path={ROUTES.partenaires} element={secure(<PartenairesPage />)} />
       <Route path={ROUTES.rapports} element={secure(<RapportsPage />)} />
       <Route path={ROUTES.prospection} element={secure(<ProspectionPage />)} />
-      <Route path={ROUTES.utilisateurs} element={secure(<UtilisateursPage />)} />
       <Route path={ROUTES.vae} element={secure(<VaePage />)} />
       <Route path={ROUTES.evenements} element={secure(<EvenementsPage />)} />
       <Route path={ROUTES.logs} element={secure(<LogPage />)} />

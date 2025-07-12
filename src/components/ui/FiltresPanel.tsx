@@ -1,7 +1,4 @@
-// src/components/ui/FiltresPanel.tsx
-
 import styled from 'styled-components';
-import type { FiltresValues } from '../../types/Filtres';
 
 const Panel = styled.div`
   display: flex;
@@ -26,11 +23,11 @@ const Select = styled.select`
   border: 1px solid ${({ theme }) => theme.colors.border};
 `;
 
-// 🔧 Supprime les doublons par ID ou value
-function uniqueById<T extends { id?: number; value?: string }>(arr: T[]): T[] {
+// ✅ Utilitaire sans `any`, compatible string/number
+function uniqueById<T extends { id?: number; value: string | number }>(arr: T[]): T[] {
   const seen = new Set<string | number>();
   return arr.filter((item) => {
-    const key = item.id !== undefined ? item.id : item.value;
+    const key = item.id ?? item.value;
     if (key === undefined) return false;
     if (seen.has(key)) return false;
     seen.add(key);
@@ -38,80 +35,55 @@ function uniqueById<T extends { id?: number; value?: string }>(arr: T[]): T[] {
   });
 }
 
-interface FiltresPanelProps {
-  filtres: {
-    centres: { id: number; nom: string }[];
-    statuts: { id: number; nom: string }[];
-    type_offres: { id: number; nom: string }[];
-    formation_etats?: { value: string; label: string }[]; // optionnel
-  };
-  values: FiltresValues;
-  onChange: (values: FiltresValues) => void;
+// ✅ Props génériques
+export interface FiltresPanelProps<T extends Record<string, string | number | undefined>> {
+  filtres: T;
+  options: Record<keyof T, Array<{ value: string | number; label: string }>>;
+  loading?: boolean;
+  onChange: (newFiltres: T) => void;
 }
 
-export default function FiltresPanel({ filtres, values, onChange }: FiltresPanelProps) {
+export default function FiltresPanel<T extends Record<string, string | number | undefined>>({
+  filtres,
+  options,
+  loading = false,
+  onChange,
+}: FiltresPanelProps<T>) {
+  if (!options || Object.keys(options).length === 0) {
+    return <Panel>Aucun filtre disponible</Panel>;
+  }
+
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = e.target;
-    const parsedValue =
+    const parsedValue: string | number | undefined =
       value === '' ? undefined : isNaN(Number(value)) ? value : Number(value);
-    onChange({ ...values, [name]: parsedValue });
+
+    onChange({
+      ...filtres,
+      [name]: parsedValue,
+    });
   };
 
   return (
     <Panel>
-      <Label>
-        Centre
-        <Select name="centre_id" value={values.centre_id ?? ''} onChange={handleChange}>
-          <option value="">— Tous les centres —</option>
-          {uniqueById(filtres.centres).map((c) => (
-            <option key={`centre-${c.id}`} value={c.id}>
-              {c.nom}
-            </option>
-          ))}
-        </Select>
-      </Label>
-
-      <Label>
-        Statut
-        <Select name="statut_id" value={values.statut_id ?? ''} onChange={handleChange}>
-          <option value="">— Tous les statuts —</option>
-          {uniqueById(filtres.statuts).map((s) => (
-            <option key={`statut-${s.id}`} value={s.id}>
-              {s.nom}
-            </option>
-          ))}
-        </Select>
-      </Label>
-
-      <Label>
-        Type d'offre
-        <Select name="type_offre_id" value={values.type_offre_id ?? ''} onChange={handleChange}>
-          <option value="">— Tous les types —</option>
-          {uniqueById(filtres.type_offres).map((t) => (
-            <option key={`type-${t.id}`} value={t.id}>
-              {t.nom}
-            </option>
-          ))}
-        </Select>
-      </Label>
-
-      {filtres.formation_etats && (
-        <Label>
-          État de formation
+      {Object.entries(options).map(([key, opts]) => (
+        <Label key={key}>
+          {key}
           <Select
-            name="formation_etat"
-            value={values.formation_etat ?? ''}
+            name={key}
+            value={String(filtres[key as keyof T] ?? '')}
             onChange={handleChange}
+            disabled={loading}
           >
-            <option value="">— Tous les états —</option>
-            {uniqueById(filtres.formation_etats).map((e) => (
-              <option key={`etat-${e.value}`} value={e.value}>
-                {e.label}
+            <option value="">— Tous —</option>
+            {uniqueById(opts).map((opt) => (
+              <option key={`${key}-${opt.value}`} value={opt.value}>
+                {opt.label}
               </option>
             ))}
           </Select>
         </Label>
-      )}
+      ))}
     </Panel>
   );
 }
