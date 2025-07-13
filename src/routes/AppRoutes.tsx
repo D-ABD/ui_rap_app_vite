@@ -49,6 +49,7 @@ import FormationsDocumentsPage from '../pages/formations/componentsFormations/Fo
 import UsersPage from '../pages/users/UsersPage';
 import UsersCreatePage from '../pages/users/UsersCreatePage';
 import UsersEditPage from '../pages/users/UsersEditPage';
+import ForbiddenPage from '../pages/ForbiddenPage';
 
 const AppRoutes = () => {
   const { isAuthenticated, isLoading } = useAuth();
@@ -60,6 +61,9 @@ const AppRoutes = () => {
 
   return (
     <Routes>
+
+      <Route path="/forbidden" element={<ForbiddenPage />} />
+
       {/* 🌐 Pages publiques */}
       <Route path={ROUTES.home} element={<WelcomePage />} />
       <Route path={ROUTES.welcome} element={<WelcomePage />} />
