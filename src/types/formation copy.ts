@@ -17,7 +17,7 @@ import type { Document } from './document';
 import type { Evenement } from './evenement';
 import type { Prospection } from './prospection';
 import type { Partenaire } from './partenaire';
-import { HistoriqueFormation } from './historique';
+import type { Historique } from './historique';
 
 // 🔷 Donnée principale : Formation (lecture complète)
 
@@ -70,7 +70,7 @@ export interface Formation {
   evenements?: Evenement[];
   prospections?: Prospection[];
   partenaires?: Partenaire[];
-  historique?: HistoriqueFormation[];
+  historique?: Historique[];
 
   // Propriétés calculées (issues du modèle)
   is_active?: boolean;
@@ -106,8 +106,6 @@ export interface FormationFormData {
   nombre_candidats?: number;
   nombre_entretiens?: number;
   dernier_commentaire?: string;
-  formations: { id: number; nom: string }[]; // nécessaire pour formation_id
-
 }
 
 export type FormationFormDataRaw = {
@@ -122,8 +120,6 @@ export interface FiltresFormationsData {
   centres: NomId[];
   statuts: NomId[];
   type_offres: NomId[];
-    formations?: { id: number; nom: string }[]; // ✅ Ajout facultatif si présent dans les filtres
-
 }
 
 export interface FiltresFormationsValues {
@@ -194,17 +190,3 @@ export interface FormationStatsParMois {
     inscrits: number;
   };
 }
-// 🔷 Formats d’export disponibles
-export type FormationExportFormat = 'csv' | 'pdf' | 'word';
-
-// 🔷 Données globales retournées par /formations/meta/
-export interface FormationMeta {
-  total_formations: number;
-  total_inscrits: number;
-  total_prevus: number;
-  saturation_moyenne: number;
-  taux_transformation_moyen: number;
-}
-
-// 🔷 Entrée d’historique de formation
-

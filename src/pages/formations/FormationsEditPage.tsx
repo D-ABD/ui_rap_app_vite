@@ -11,8 +11,7 @@ import Button from '../../components/ui/Button';
 import Loader from '../../components/ui/Loader';
 
 import useForm from '../../hooks/useForm';
-import { useFormation, useUpdateFormation } from '../../hooks/useFormations';
-import { useFormationChoices } from '../../hooks/useFormationChoices';
+import { useFormation, useFormationChoices, useUpdateFormation } from '../../hooks/useFormations';
 
 import type { FormationFormData, FormationFormDataRaw, FormationFormErrors } from '../../types/formation';
 import CommentairesSection from './componentsFormations/CommentairesSection';

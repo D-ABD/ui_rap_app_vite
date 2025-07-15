@@ -29,3 +29,13 @@ useEffect(() => {
 
   return { filtres, loading, error };
 }
+
+export function toRecord<T extends object>(obj: T): Record<string, string | number | undefined> {
+  const record: Record<string, string | number | undefined> = {};
+  for (const [key, value] of Object.entries(obj)) {
+    if (typeof value === 'string' || typeof value === 'number' || value === undefined) {
+      record[key] = value;
+    }
+  }
+  return record;
+}

@@ -24,6 +24,7 @@ const ModalBox = styled.div`
 
 type Props = {
   show: boolean;
+  
   onCancel: () => void;
   onConfirm: () => void | Promise<void>;
   message: string;
@@ -36,6 +37,7 @@ export default function ConfirmationModal({
   show,
   onCancel,
   onConfirm,
+  
   message,
   loading = false,
   showConfirmButton = true,

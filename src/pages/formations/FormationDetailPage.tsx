@@ -10,6 +10,7 @@ import { useFormation } from '../../hooks/useFormations';
 import CommentairesSection from './componentsFormations/CommentairesSection';
 import { useCommentaires } from '../../hooks/useCommentaires';
 import DocumentsSection from './componentsFormations/DocumentsSection';
+import HistoriqueSection from './componentsFormations/HistoriqueSection';
 
 const Section = styled.section`
   margin-top: ${({ theme }) => theme.spacing.m};
@@ -101,6 +102,12 @@ const { commentaires, loading: loadingCommentaires } = useCommentaires(Number(id
         <SectionTitle>📎 Documents</SectionTitle>
         <DocumentsSection documents={formation.documents} />
       </Section>
+
+      <Section>
+        <SectionTitle>📎 Historique de la formation</SectionTitle>
+        <HistoriqueSection formationId={formation.id} defaultOpen={false} />
+      </Section>
+
 
 
       <Button

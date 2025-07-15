@@ -8,5 +8,7 @@ export interface FiltresValues {
   centre_id?: number;
   statut_id?: number;
   type_offre_id?: number;
-  formation_etat?: string; // ⬅️ Ajouté
+  formation_etat?: string; 
+  [key: string]: string | number | undefined; 
+  
 }

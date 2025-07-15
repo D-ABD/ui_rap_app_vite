@@ -50,6 +50,7 @@ import UsersPage from '../pages/users/UsersPage';
 import UsersCreatePage from '../pages/users/UsersCreatePage';
 import UsersEditPage from '../pages/users/UsersEditPage';
 import ForbiddenPage from '../pages/ForbiddenPage';
+import HistoriquesPage from '../pages/formations/FormationsHistoriquePage';
 
 const AppRoutes = () => {
   const { isAuthenticated, isLoading } = useAuth();
@@ -103,7 +104,8 @@ const AppRoutes = () => {
       <Route path="/formations/:id" element={secure(<FormationDetailPage />)} />
       <Route path="/formations/:formationId/commentaires" element={secure(<FormationsCommentairesPage />)} />
       <Route path="/formations/:formationId/documents" element={secure(<FormationsDocumentsPage />)} />
-
+<Route path="/formations/historiques" element={secure(<HistoriquesPage />)} />
+ 
 
       {/* Documents */}
       <Route path="/documents" element={secure(<DocumentsPage />)} />

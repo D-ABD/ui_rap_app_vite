@@ -38,16 +38,19 @@ function uniqueById<T extends { id?: number; value: string | number }>(arr: T[])
 // ✅ Props génériques
 export interface FiltresPanelProps<T extends Record<string, string | number | undefined>> {
   filtres: T;
-  options: Record<keyof T, Array<{ value: string | number; label: string }>>;
+  values: T;
+  visibleKeys?: (keyof T)[];
   loading?: boolean;
   onChange: (newFiltres: T) => void;
+  options?: Record<keyof T, { label: string; value: string | number }[]>;
 }
 
 export default function FiltresPanel<T extends Record<string, string | number | undefined>>({
-  filtres,
+  values,
   options,
   loading = false,
   onChange,
+  visibleKeys,
 }: FiltresPanelProps<T>) {
   if (!options || Object.keys(options).length === 0) {
     return <Panel>Aucun filtre disponible</Panel>;
@@ -59,24 +62,26 @@ export default function FiltresPanel<T extends Record<string, string | number | 
       value === '' ? undefined : isNaN(Number(value)) ? value : Number(value);
 
     onChange({
-      ...filtres,
+      ...values,
       [name]: parsedValue,
     });
   };
 
+  const keys = visibleKeys?.map(String) ?? Object.keys(options);
+
   return (
     <Panel>
-      {Object.entries(options).map(([key, opts]) => (
-        <Label key={key}>
-          {key}
+      {keys.map((key) => (
+        <Label key={String(key)}>
+          {String(key)}
           <Select
             name={key}
-            value={String(filtres[key as keyof T] ?? '')}
+            value={String(values[key as keyof T] ?? '')}
             onChange={handleChange}
             disabled={loading}
           >
             <option value="">— Tous —</option>
-            {uniqueById(opts).map((opt) => (
+            {uniqueById(options?.[key as keyof T] ?? []).map((opt) => (
               <option key={`${key}-${opt.value}`} value={opt.value}>
                 {opt.label}
               </option>

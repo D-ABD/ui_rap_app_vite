@@ -116,11 +116,14 @@ const ParametresPage = () => {
           <CardLink to="/recherche">Accéder</CardLink>
         </Card>
 
-        <Card>
-          <CardTitle>Historique Formations</CardTitle>
-          <CardText>Consulter l’historique des formations.</CardText>
-          <CardLink to="/formations/historique">Accéder</CardLink>
-        </Card>
+<Card>
+  <CardTitle>📜 Historique des Formations</CardTitle>
+  <CardText>
+    Retrouvez toutes les modifications apportées aux formations : dates, places, statuts, etc.
+  </CardText>
+  <CardLink to="/formations/historiques">🕓 Accéder à l’historique</CardLink>
+</Card>
+
 
         <Card>
           <CardTitle>Historique Prospections</CardTitle>

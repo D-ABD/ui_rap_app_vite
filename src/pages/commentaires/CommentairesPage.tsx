@@ -12,7 +12,6 @@ import ConfirmationModal from '../../components/ui/ConfirmationModal';
 import Loader from '../../components/ui/Loader';
 import EmptyState from '../../components/ui/EmptyState';
 import ExportButtonWithFilters from '../../components/ui/ExportButtonWithFilters';
-import FiltresPanel from '../../components/ui/FiltresPanel';
 
 import usePagination from '../../hooks/usePagination';
 import useFetch from '../../hooks/useFetch';
@@ -21,6 +20,7 @@ import useFiltres from '../../hooks/useFiltresCommentaires';
 import type { Commentaire } from '../../types/commentaire';
 import type { FiltresValues } from '../../types/Filtres';
 import CommentaireContent from '../../components/ui/CommentaireContent';
+import FiltresCommentairesPanel from '../../components/ui/FiltresCommentairesPanel';
 
 const PageSizeSelect = styled.select`
   padding: ${({ theme }) => theme.spacing.s};
@@ -171,7 +171,7 @@ export default function CommentairesPage() {
       </ActionsRow>
 
       {filtres && (
-        <FiltresPanel
+        <FiltresCommentairesPanel
           filtres={filtres}
           values={filters}
           onChange={(updated) => {

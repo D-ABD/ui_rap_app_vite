@@ -10,8 +10,7 @@ import FormSelect from '../../components/ui/FormSelect';
 import Button from '../../components/ui/Button';
 
 import useForm from '../../hooks/useForm';
-import { useCreateFormation } from '../../hooks/useFormations';
-import { useFormationChoices } from '../../hooks/useFormationChoices';
+import { useCreateFormation, useFormationChoices,  } from '../../hooks/useFormations';
 
 import type {
   FormationFormData,
